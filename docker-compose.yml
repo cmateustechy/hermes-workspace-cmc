@@ -20,13 +20,7 @@ services:
       API_SERVER_HOST: "0.0.0.0"
       API_SERVER_KEY: ${API_SERVER_KEY:?Set API_SERVER_KEY in .env}
 
-      HERMES_DASHBOARD: "1"
-      HERMES_DASHBOARD_HOST: "0.0.0.0"
-      HERMES_DASHBOARD_PORT: "9119"
-
-      HERMES_DASHBOARD_BASIC_AUTH_USERNAME: ${HERMES_DASHBOARD_BASIC_AUTH_USERNAME:?Set dashboard username}
-      HERMES_DASHBOARD_BASIC_AUTH_PASSWORD: ${HERMES_DASHBOARD_BASIC_AUTH_PASSWORD:?Set dashboard password}
-      HERMES_DASHBOARD_BASIC_AUTH_SECRET: ${HERMES_DASHBOARD_BASIC_AUTH_SECRET:?Set dashboard session secret}
+      HERMES_DASHBOARD: "0"
 
     volumes:
       - hermes-agent-data:/opt/data
@@ -60,7 +54,7 @@ services:
 
       # Internal Docker network endpoints
       HERMES_API_URL: "http://hermes-agent:8642"
-      HERMES_DASHBOARD_URL: "http://hermes-agent:9119"
+      #HERMES_DASHBOARD_URL: "http://hermes-agent:9119"
 
       # Must match API_SERVER_KEY above
       HERMES_API_TOKEN: ${API_SERVER_KEY:?Set API_SERVER_KEY in .env}

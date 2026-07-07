@@ -4,11 +4,10 @@ services:
     image: nousresearch/hermes-agent:latest
     container_name: hermes-agent
     restart: unless-stopped
-    command: [ "gateway", "run" ]
+    command: ["gateway", "run"]
     env_file:
       - .env
     environment:
-      # LLM provider keys
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
@@ -16,26 +15,28 @@ services:
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       MISTRAL_API_KEY: ${MISTRAL_API_KEY:-}
 
-      # Hermes runtime
       HERMES_UID: "10010"
       API_SERVER_ENABLED: "true"
       API_SERVER_HOST: "0.0.0.0"
       API_SERVER_KEY: ${API_SERVER_KEY:?Set API_SERVER_KEY in .env}
 
-      # Keep dashboard enabled for the workspace integration,
-      # but do NOT expose it publicly from the container.
       HERMES_DASHBOARD: "1"
-      HERMES_DASHBOARD_HOST: "127.0.0.1"
+      HERMES_DASHBOARD_HOST: "0.0.0.0"
       HERMES_DASHBOARD_PORT: "9119"
-      # Optional: keep messaging platforms locked down by default.
-      # Uncomment and tune only if/when you enable Telegram/Discord/etc.
-      # GATEWAY_ALLOW_ALL_USERS: "false"
+
+      HERMES_DASHBOARD_BASIC_AUTH_USERNAME: ${HERMES_DASHBOARD_BASIC_AUTH_USERNAME:?Set dashboard username}
+      HERMES_DASHBOARD_BASIC_AUTH_PASSWORD: ${HERMES_DASHBOARD_BASIC_AUTH_PASSWORD:?Set dashboard password}
+      HERMES_DASHBOARD_BASIC_AUTH_SECRET: ${HERMES_DASHBOARD_BASIC_AUTH_SECRET:?Set dashboard session secret}
 
     volumes:
       - hermes-agent-data:/opt/data
 
     healthcheck:
-      test: [ "CMD-SHELL", "curl -fsS http://127.0.0.1:8642/health && curl -fsS http://127.0.0.1:9119/api/status || exit 1" ]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -fsS http://127.0.0.1:8642/health && curl -fsS http://127.0.0.1:9119/api/status || exit 1"
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

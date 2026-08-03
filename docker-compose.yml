@@ -50,7 +50,10 @@ services:
       - hermes-internal
 
   hermes-workspace:
-    image: ghcr.io/outsourc-e/hermes-workspace:2.3.0
+    image: ghcr.io/outsourc-e/hermes-workspace:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     container_name: hermes-workspace
     restart: unless-stopped
     depends_on:
